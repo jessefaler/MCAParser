@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4c0dd8ac-2b06-4f86-a7e1-fb157d083ae1" name="Changes" comment="Added project files">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/regionFiles/1.21/r.-1.-1.mca" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/regionFiles/1.21/r.0.0.mca" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/regionFiles/1.8/r.0.0.mca" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/regionFiles/1.8/r.1.1.mca" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sources.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/protoxon/mca/Chunk.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/protoxon/mca/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/protoxon/mca/Pos.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/protoxon/mca/Region.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/ConversionException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/ConverterRegistry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/TagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/ByteArrayTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/ByteTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/CompoundTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/DoubleTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/FloatTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/IntArrayTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/IntTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/ListTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/LongArrayTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/LongTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/ShortTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/conversion/converter/StringTagConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/io/NBTIO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/io/TagReader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/io/TagRegistry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/io/TagWriter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/limiter/NoopTagLimiter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/limiter/TagLimiter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/limiter/TagLimiterImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/stringified/CharBuffer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/stringified/SNBT.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/stringified/StringifiedTagParseException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/stringified/TagStringReader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/stringified/TagStringWriter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/stringified/Tokens.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/ByteArrayTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/ByteTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/CompoundTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/DoubleTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/FloatTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/IntArrayTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/IntTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/ListTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/LongArrayTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/LongTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/NumberArrayTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/NumberTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/ShortTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/StringTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/viaversion/nbt/tag/Tag.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2ilnGu9R9T9niSopY3qOKrX9SmA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.importing"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4c0dd8ac-2b06-4f86-a7e1-fb157d083ae1" name="Changes" comment="" />
+      <created>1720073941705</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1720073941705</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Added project files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added project files" />
+  </component>
+</project>
