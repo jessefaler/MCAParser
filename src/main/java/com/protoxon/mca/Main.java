@@ -8,11 +8,8 @@ public class Main {
 
     //A class for testing
     public static void main(String[] args) throws IOException, DataFormatException {
-        File file = new File("regionFiles/1.21/r.0.0.mca");
-
-        Region region = new Region(file);
-
-        region.chunks();
-        System.out.println(region.Chunk(0,0).DataVersion());
+        Region region = new Region("regionFiles/1.21/r.0.0.mca");
+        System.out.println(region.getChunk(0 ,0).DataVersion());
+        //System.out.println(region.getChunk(0, 0).getBlocks());
     }
 }

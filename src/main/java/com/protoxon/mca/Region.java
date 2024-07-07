@@ -3,6 +3,8 @@ package com.protoxon.mca;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,39 +20,42 @@ public class Region {
     HashMap<Pos, Chunk> CHUNKS = new HashMap<>(1024, 1);
 
     Region(File region) throws IOException {
-        read(region);
+        this.region = read(region);
+        loadChunks();
     }
 
-    /* reads in the region file and converts it to a byte[]
-     * @param file, the region file
-     * @throws IOException
+    Region(String region) throws IOException {
+        this.region = read(region);
+        loadChunks();
+    }
+
+    /**
+     * Reads the contents of a region file and converts it to a byte array.
+     * @param file File object representing the region file
+     * @return byte[] The contents of the file as a byte array
+     * @throws IOException If an I/O error occurs reading from the file
      */
-    private void read(File file) throws IOException {
-
-        // Creating an object of FileInputStream to
-        // read from a file
-        FileInputStream fileInputStream = new FileInputStream(file);
-
-        // Now creating byte array of same length as file
-        byte[] region = new byte[(int)file.length()];
-
-        // Reading file content to byte array
-        // using standard read() method
-        fileInputStream.read(region);
-
-        // lastly closing an instance of file input stream
-        // to avoid memory leakage
-        fileInputStream.close();
-
-        // Returning above byte array
-        this.region = region;
+    private byte[] read(File file) throws IOException {
+        return Files.readAllBytes(file.toPath());
     }
 
-    /* Gets the offsets of the chunks in the region file
+    /**
+     * Reads the contents of a region file and converts it to a byte array.
+     * @param file Path to the region file as a string
+     * @return byte[] The contents of the file as a byte array
+     * @throws IOException If an I/O error occurs reading from the file
+     */
+    private byte[] read(String file) throws IOException {
+        return Files.readAllBytes(Paths.get(file));
+    }
+
+    /**
+     * <pre>
+     * Gets the offsets of the chunks in the region file
      * offsets: (1024 entries; 4 bytes each) 3 bytes for the offset and one byte for the sector count
      * The Offsets indicate the sector that the chunks data is stored in each sector is 4096 bytes
      * There are 1024 entries because a region file has 32x32 chunks (32 * 32 = 1024)
-     *
+     * <p>
      * Range: 0x00 - 0x0FFF (0 - 4095) which covers 4096 bytes
      * This range covers the first 4096 bytes of the region file (1024 entries * 4 bytes each = 4096 bytes)
      *
@@ -79,7 +84,9 @@ public class Region {
         return offsets;
     }
 
-    /* Gets the timestamps of the chunks in the region file
+    /**
+     * <pre>
+     * Gets the timestamps of the chunks in the region file
      * timestamps: (1024 entries; 4 bytes each)
      * The timestamps are four-byte big-endian integers, representing the last modification time of a chunk in epoch seconds
      * There are 1024 entries because a region file has 32x32 chunks (32 * 32 = 1024)
@@ -118,7 +125,7 @@ public class Region {
      * Range: 0x2000... (8192...) covers all remaining bytes after 8191
      * includes chunks and unused space
      */
-    public void chunks() throws IOException {
+    private void loadChunks() throws IOException {
         int length;
         int compressionType;
         byte[] compressedData;
@@ -144,8 +151,10 @@ public class Region {
             }
         }
     }
-    public Chunk Chunk(int x, int z) {
+
+    //------------------------------------------------------------//
+
+    public Chunk getChunk(int x, int z) {
         return CHUNKS.get(new Pos(x, z));
     }
-
 }

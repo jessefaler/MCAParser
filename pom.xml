@@ -6,7 +6,7 @@
 
     <groupId>com.protoxon</groupId>
     <artifactId>MCAParser</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-BETA</version>
     <description>A library for reading and writing region files.</description>
 
     <properties>
