@@ -1,13 +1,13 @@
 package com.protoxon.mca;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import com.protoxon.mca.chunk.Chunk;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /*
  * see "https://minecraft.fandom.com/wiki/Region_file_format" for more info
@@ -17,8 +17,11 @@ public class Region {
 
     byte[] region;
 
-    HashMap<Pos, Chunk> CHUNKS = new HashMap<>(1024, 1);
+    private static HashMap<Integer, String> dataVersions;
 
+    //HashMap to store all chunks loaded into memory
+    //The key is a long that holds two 32-bit integers representing the x and z positions of the chunk
+    HashMap<Long, Chunk> CHUNKS = new HashMap<>(1024, 1);
     Region(File region) throws IOException {
         this.region = read(region);
         loadChunks();
@@ -147,14 +150,77 @@ public class Region {
 
             if(compressionType != 0) {//if it is zero it is an empty chunk
                 Chunk chunk = new Chunk(length, compressionType, compressedData);
-                CHUNKS.put(chunk.pos(), chunk);
+                CHUNKS.put(computeKey(chunk.getXPos().asInt(), chunk.getZPos().asInt()), chunk);
             }
         }
     }
-
-    //------------------------------------------------------------//
-
     public Chunk getChunk(int x, int z) {
-        return CHUNKS.get(new Pos(x, z));
+        return CHUNKS.get(computeKey(x, z));
     }
+
+    /**
+     * Computes a unique key identifier for an (x, z) position.
+     * Combines the x integer in the upper 32 bits of a long
+     * and the z integer in the lower 32 bits, leveraging the
+     * 64-bit size of a long.
+     *
+     * @param x The x position integer.
+     * @param z The z position integer.
+     * @return A unique long key identifier combining x and z.
+     */
+    private long computeKey(int x, int z) {
+        return ((long) x << 32) | z;
+    }
+
+    /**
+     * Retrieves the x and z position integers from a given key.
+     * Assumes the key was generated using computeKey(x, z).
+     *
+     * @param key The key containing combined x and z positions.
+     * @return An array where index 0 is x and index 1 is z.
+     */
+    private int[] getPosFromKey(long key) {
+        int x = (int) (key >> 32);  // Retrieve x from upper 32 bits
+        int z = (int) key;          // Retrieve z from lower 32 bits
+        return new int[]{x, z};
+    }
+
+    /**
+     * Retrieves the Minecraft version corresponding to the given data version.
+     * This method initializes the dataVersion HashMap on the first call,
+     * ensuring that it is only loaded when necessary.
+     *
+     * @param dataVersion The data version number.
+     * @return A String specifying the Minecraft version.
+     */
+    public static String getMCVersionFromDataVersion(int dataVersion) {
+        if(dataVersions == null) {
+            readInDataVersions();
+        }
+        return dataVersions.get(dataVersion);
+    }
+
+    /**
+     * Reads the data versions file and populates the dataVersions HashMap.
+     * The file is expected to be in the format "minecraftVersion, dataVersion" on each line.
+     */
+    private static void readInDataVersions() {
+        dataVersions = new HashMap<>(557);
+        try (InputStream inputStream = Region.class.getResourceAsStream("/dataVersions");
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(", ");
+                if (parts.length == 2) {
+                    String minecraftVersion = parts[0];
+                    int dataVersion = Integer.parseInt(parts[1]);
+                    dataVersions.put(dataVersion, minecraftVersion);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
