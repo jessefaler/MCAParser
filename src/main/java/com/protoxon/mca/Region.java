@@ -5,9 +5,7 @@ import com.protoxon.mca.chunk.Chunk;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /*
  * see "https://minecraft.fandom.com/wiki/Region_file_format" for more info
@@ -16,19 +14,27 @@ import java.util.TreeMap;
 public class Region {
 
     byte[] region;
-
+    int[] offsets = new int[1024];
     private static HashMap<Integer, String> dataVersions;
 
     //HashMap to store all chunks loaded into memory
     //The key is a long that holds two 32-bit integers representing the x and z positions of the chunk
-    HashMap<Long, Chunk> CHUNKS = new HashMap<>(1024, 1);
+    Map<Long, Chunk> CHUNKS = new LinkedHashMap<>(1024, 1);
     Region(File region) throws IOException {
         this.region = read(region);
+        offsets = offsets();
         loadChunks();
     }
 
+    /**
+     * Reads the region file and loads the chunks
+     *
+     * @param region The path to the region file.
+     * @throws IOException if an I/O error occurs during file reading.
+     */
     Region(String region) throws IOException {
         this.region = read(region);
+        offsets = offsets();
         loadChunks();
     }
 
@@ -41,6 +47,174 @@ public class Region {
     private byte[] read(File file) throws IOException {
         return Files.readAllBytes(file.toPath());
     }
+
+
+    public byte[] exportRegion() throws IOException {
+        //Header initialization
+        byte[] LOCATIONS = new byte[0]; //locations (1024 entries; 4 bytes each) indexes 0-4095
+        byte[] TIMESTAMPS = new byte[0]; //timestamps (1024 entries; 4 bytes each) indexes 4096-8192
+        byte[] CHUNKS_OUT = new byte[0]; //(chunks and unused space) indexes 8193...
+        byte[] MCA_DATA = new byte[0];
+
+        //get all the chunks
+        for(Chunk chunk : CHUNKS.values()) {
+            //chunk.saveChunk();
+
+            byte[] compressedChunk = chunk.saveChunk();
+            if(chunk.getXPos().asInt() == 0 && chunk.getZPos().asInt() == 0) {
+                System.out.println(chunk.chunkNBT);
+            }
+            //gets the offset and sector count
+            int offset = getNumberOf4KiBSectors(8192 + CHUNKS_OUT.length);
+            int sectorCount = getNumberOf4KiBSectors(compressedChunk.length + 4); //chunks compressed data + payload
+            byte[] location = appendBytes(mapIntToBytes(offset, 3), mapIntToBytes(sectorCount, 1));
+            LOCATIONS = appendBytes(LOCATIONS, location);
+            //constructs the chunks Payload information
+            int length = compressedChunk.length + 1;//the number of bytes the chunks compressed data takes up plus the compression type field
+            int compressionType = 2;//2 for Zlib (need to add full functionality)
+            byte[] payload = appendBytes(mapIntToBytes(length, 4), appendBytes(mapIntToBytes(compressionType, 1), compressedChunk));
+            CHUNKS_OUT = padTo4096(appendBytes(CHUNKS_OUT, payload));
+        }
+        //get timestamps
+        TIMESTAMPS = sliceByteArray(region, 4096, 8192);
+        //construct the MCA Data
+        MCA_DATA = appendBytes(MCA_DATA, LOCATIONS);
+        MCA_DATA = appendBytes(MCA_DATA, TIMESTAMPS);
+        MCA_DATA = appendBytes(MCA_DATA, CHUNKS_OUT);
+        MCA_DATA = padTo4096(MCA_DATA);
+        return MCA_DATA;
+    }
+
+    public byte[] sliceByteArray(byte[] data, int startIndex, int endIndex) {
+        if (startIndex < 0 || endIndex > data.length || startIndex > endIndex) {
+            throw new IllegalArgumentException("Invalid start or end index");
+        }
+
+        // Calculate the length of the new byte array
+        int length = endIndex - startIndex;
+
+        // Create the new byte array to hold the slice
+        byte[] result = new byte[length];
+
+        // Copy the specified range from the original array into the new array
+        System.arraycopy(data, startIndex, result, 0, length);
+
+        return result;
+    }
+
+    public int getNumberOf4KiBSectors(int byteCount) {
+        int sectorSize = 4096;
+        return (byteCount + sectorSize - 1) / sectorSize;
+    }
+
+    public static byte[] padTo4096(byte[] data) {
+        int sectorSize = 4096;
+        int originalLength = data.length;
+
+        // Calculate how much padding is needed
+        int padding = sectorSize - (originalLength % sectorSize);
+
+        // If the data is already a multiple of 4096, no padding is needed
+        if (padding == sectorSize) {
+            return data;
+        }
+
+        // Create a new array with the new length (original length + padding)
+        byte[] paddedData = Arrays.copyOf(data, originalLength + padding);
+
+        // Optionally fill the padding with zeros (this is done by Arrays.copyOf automatically)
+        // If specific padding is required, you can fill the rest manually
+
+        return paddedData;
+    }
+
+
+    public byte[] appendBytes(byte[] original, byte[] toAppend) {
+        byte[] result = new byte[original.length + toAppend.length];
+
+        // Copy the original byte array into the result
+        System.arraycopy(original, 0, result, 0, original.length);
+
+        // Copy the byte array to append into the result
+        System.arraycopy(toAppend, 0, result, original.length, toAppend.length);
+
+        return result;
+    }
+
+
+    public byte[] mapIntToBytes(int number, int numBytes) {
+        // Check if the number of bytes is valid
+        if (numBytes < 1 || numBytes > 4) {
+            throw new IllegalArgumentException("Number of bytes must be between 1 and 4.");
+        }
+
+        byte[] unsignedBytes = new byte[numBytes];
+
+        // Convert the integer to the corresponding unsigned byte array
+        for (int i = 0; i < numBytes; i++) {
+            unsignedBytes[numBytes - 1 - i] = (byte) (number >>> (i * 8));
+        }
+
+        return unsignedBytes;
+    }
+
+
+    /*
+
+
+
+
+    public byte[] exportRegion() throws IOException {
+        byte[] newOffsets = new byte[4096];
+        byte[] out = Arrays.copyOfRange(region, 4096,8191);
+        byte sectorCount;
+        int offsetIndex = 0;
+        int currentByte = 8192;//chunk data starts at byte 8192
+        int lastChunk = 0;
+        for(Chunk chunk : CHUNKS.values()) {
+            byte[] temp = chunk.compress();
+            byte[] result = new byte[out.length + temp.length];
+            System.arraycopy(temp, 0, result, 0, temp.length);
+            System.arraycopy(out, 0, result, temp.length, out.length);
+
+
+
+            sectorCount = (byte) (((temp.length + 5) / 4096) & 0xFF); //divide by 4 to get the sector count
+            if(lastChunk == CHUNKS.size() - 1) {//add padding to the last chunk to be a multiple-of-4096B in length
+                result = addPadding(result);
+            }
+            out = result;
+            currentByte += result.length;
+            System.out.println("unsigned: " + ((temp.length / 4096) & 0xFF));
+            newOffsets[offsetIndex] = (byte) ((currentByte >> 16) & 0xFF);
+            newOffsets[offsetIndex + 1] = (byte) ((currentByte >> 8) & 0xFF);
+            newOffsets[offsetIndex + 2] = (byte) ((currentByte) & 0xFF);
+            newOffsets[offsetIndex + 3] = sectorCount;
+            System.out.println(newOffsets[offsetIndex + 3]);
+            offsetIndex += 4;
+            lastChunk++;
+        }
+        byte[] result = new byte[out.length + newOffsets.length];
+        System.arraycopy(newOffsets, 0, result, 0, newOffsets.length);
+        System.arraycopy(out, 0, result, newOffsets.length, out.length);
+        System.out.println("result: " + result[3]);
+        out = result;
+        return out;
+    }
+
+
+    //adds padding to a byte array
+    private byte[] addPadding(byte[] originalArray) {
+        int originalLength = originalArray.length;
+        int paddedLength = ((originalLength + 4096 - 1) / 4096) * 4096;
+
+        byte[] paddedArray = new byte[paddedLength];
+        System.arraycopy(originalArray, 0, paddedArray, 0, originalLength);
+
+        return paddedArray;
+    }
+
+     */
 
     /**
      * Reads the contents of a region file and converts it to a byte array.
@@ -132,6 +306,7 @@ public class Region {
         int length;
         int compressionType;
         byte[] compressedData;
+        int count = 0;
         for(int offset : offsets()) {
 
             //get the number of bytes the chunks compressed data takes up
@@ -149,11 +324,13 @@ public class Region {
             compressedData = Arrays.copyOfRange(region, offset + 5, (offset + 5) + (length - 1));
 
             if(compressionType != 0) {//if it is zero it is an empty chunk
-                Chunk chunk = new Chunk(length, compressionType, compressedData);
+                Chunk chunk = new Chunk(compressionType, compressedData);
                 CHUNKS.put(computeKey(chunk.getXPos().asInt(), chunk.getZPos().asInt()), chunk);
             }
+            count++;
         }
     }
+
     public Chunk getChunk(int x, int z) {
         return CHUNKS.get(computeKey(x, z));
     }
@@ -180,8 +357,8 @@ public class Region {
      * @return An array where index 0 is x and index 1 is z.
      */
     private int[] getPosFromKey(long key) {
-        int x = (int) (key >> 32);  // Retrieve x from upper 32 bits
-        int z = (int) key;          // Retrieve z from lower 32 bits
+        int x = (int) (key >> 32);  //retrieves x from upper 32 bits
+        int z = (int) key;          //retrieves z from lower 32 bits
         return new int[]{x, z};
     }
 
@@ -201,16 +378,16 @@ public class Region {
     }
 
     /**
-     * Reads the data versions file and populates the dataVersions HashMap.
+     * Reads the data versions file and populates the Data_Versions HashMap.
      * The file is expected to be in the format "minecraftVersion, dataVersion" on each line.
      */
     private static void readInDataVersions() {
         dataVersions = new HashMap<>(557);
-        try (InputStream inputStream = Region.class.getResourceAsStream("/dataVersions");
-             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (InputStream inputStream = Region.class.getResourceAsStream("/Data_Versions");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(", ");
                 if (parts.length == 2) {
                     String minecraftVersion = parts[0];
@@ -222,5 +399,4 @@ public class Region {
             e.printStackTrace();
         }
     }
-
 }
