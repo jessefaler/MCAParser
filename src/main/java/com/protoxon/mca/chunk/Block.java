@@ -9,9 +9,7 @@ import com.viaversion.nbt.tag.StringTag;
  */
 public class Block {
 
-    private final int posX;
-    private final int posY;
-    private final int posZ;
+    private final int[] location;
     private final String name;
     private final CompoundTag properties;
     private final CompoundTag blockState;
@@ -20,12 +18,10 @@ public class Block {
      * Constructs a Block with the specified block state and position.
      *
      * @param blockState the block state containing the block's name and properties
-     * @param pos the position of the block in the format [x, y, z]
+     * @param location the position of the block in the format [x, y, z]
      */
-    public Block(CompoundTag blockState, int[] pos) {
-        posX = pos[0];
-        posY = pos[1];
-        posZ = pos[2];
+    public Block(CompoundTag blockState, int[] location) {
+        this.location = location;
         name = blockState.get("Name").asRawString();
         properties = (CompoundTag) blockState.get("Properties");
         this.blockState = blockState;
@@ -35,14 +31,24 @@ public class Block {
      * Constructs a Block with the specified block state and position.
      *
      * @param blockState the block state containing the block's name and properties
-     * @param x the x-coordinate of the block
-     * @param y the y-coordinate of the block
-     * @param z the z-coordinate of the block
+     * @param xPos the x-coordinate of the block
+     * @param yPos the y-coordinate of the block
+     * @param zPos the z-coordinate of the block
      */
-    public Block(CompoundTag blockState, int x, int y, int z) {
-        posX = x;
-        posY = y;
-        posZ = z;
+    public Block(CompoundTag blockState, int xPos, int yPos, int zPos) {
+        location = new int[]{xPos, yPos, zPos};
+        name = blockState.get("Name").asRawString();
+        properties = (CompoundTag) blockState.get("Properties");
+        this.blockState = blockState;
+    }
+
+    /**
+     * Constructs a Block with the specified block state and position.
+     *
+     * @param blockState the block state containing the block's name and properties
+     */
+    public Block(CompoundTag blockState) {
+        location = null;
         name = blockState.get("Name").asRawString();
         properties = (CompoundTag) blockState.get("Properties");
         this.blockState = blockState;
@@ -81,7 +87,7 @@ public class Block {
      * @return an array containing the x, y, and z coordinates of the block
      */
     public int[] getPos() {
-        return new int[]{posX, posY, posZ};
+        return location;
     }
 
     /**
@@ -90,7 +96,7 @@ public class Block {
      * @return the x-coordinate of the block
      */
     public int getPosX() {
-        return posX;
+        return location[0];
     }
 
     /**
@@ -99,7 +105,7 @@ public class Block {
      * @return the y-coordinate of the block
      */
     public int getPosY() {
-        return posY;
+        return location[1];
     }
 
     /**
@@ -108,6 +114,6 @@ public class Block {
      * @return the z-coordinate of the block
      */
     public int getPosZ() {
-        return posZ;
+        return location[2];
     }
 }
