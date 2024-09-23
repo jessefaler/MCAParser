@@ -1,7 +1,7 @@
 ---
 # MCAParser
 
-MCAParser is a library for reading and writing minecraft [MCA files](https://minecraft.wiki/w/Region_file_format).
+MCAParser is a library for reading and writing region [MCA files](https://minecraft.wiki/w/Region_file_format).
 
 This project utilizes [ViaNBT](https://github.com/ViaVersion/ViaNBT) to handle NBT tags within the MCA files.
 
