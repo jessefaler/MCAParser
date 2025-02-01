@@ -1,6 +1,6 @@
 # MCAParser  
 
-**MCAParser** is a Java library designed for reading and writing region files ([MCA files](https://minecraft.wiki/w/Region_file_format)). This project leverages [ViaNBT](https://github.com/ViaVersion/ViaNBT) to handle NBT (Named Binary Tag) data within MCA files.  
+**MCAParser** is a Java library designed for reading and writing region files ([MCA files](https://minecraft.wiki/w/Region_file_format)). This project uses [ViaNBT](https://github.com/ViaVersion/ViaNBT) to handle NBT (Named Binary Tag) data within MCA files.  
 
 ## Features  
 
@@ -17,7 +17,7 @@ This project is currently on hold. While the library provides basic functionalit
 If you wish to use this library, you can download the source code and integrate it directly into your project.  
 
 ### Alternative Recommendation  
-For those seeking a robust and up-to-date MCA parsing library in Java, consider using **ens-gijs NBT** (under development), a fork of **Querz NBT**. It supports both MCA reading and writing but may require minor modifications to its source code to save written data.  
+For an up-to-date MCA parsing library in Java, consider using **ens-gijs NBT** (under development), a fork of **Querz NBT**. It supports both MCA reading and writing but may require minor modifications to its source code to save written data.  
 
 ## Future Plans  
 
