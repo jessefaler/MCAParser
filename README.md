@@ -17,7 +17,7 @@ This project is currently on hold. While the library provides basic functionalit
 If you wish to use this library, you can download the source code and integrate it directly into your project.  
 
 ### Alternative Recommendation  
-For an up-to-date MCA parsing library in Java, consider using **ens-gijs NBT** (under development), a fork of **Querz NBT**. It supports both MCA reading and writing but may require minor modifications to its source code to save written data.  
+For an up-to-date MCA parsing library in Java, consider using **[ens-gijs/NBT](https://github.com/ens-gijs/NBT)** (under development), a fork of **Querz NBT**. It supports both MCA reading and writing but may require minor modifications to its source code to save written data.  
 
 ## Future Plans  
 
