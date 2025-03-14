@@ -9,10 +9,11 @@
 
 ## Project Status  
 
-⚠️ **Development Paused**  
-This project is currently on hold. While the library provides basic functionality for reading MCA files, it:  
-- Does not yet support writing MCA files.  
-- Has known bugs that may affect functionality.  
+> [!WARNING]  
+> **Development Paused** 
+> This project is currently on hold. While the library provides basic functionality for reading MCA files, it:  
+> - Does not yet support writing MCA files.  
+> - Has known bugs that may affect functionality.  
 
 If you wish to use this library, you can download the source code and integrate it directly into your project.  
 
